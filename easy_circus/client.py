@@ -35,7 +35,7 @@ class Client(object):
         addWatcher_command.properties.start = autostart
 
         response = self._client.call(addWatcher_command)
-        response.get('status', None)
+        response = response.get('status', None)
 
         if response:
             if response == 'ok':
@@ -53,6 +53,21 @@ class Client(object):
         assert(type(sequential), bool)
         assert(type(waiting), bool)
 
+        reload_command = Dict()
+        reload_command.command = 'reload'
+        reload_command.properties.name = watcher
+        reload_command.properties.graceful = graceful
+        reload_command.properties.sequential = sequential
+        reload_command.properties.waiting = waiting
+
+        response = self._client.call(reload_command)
+        response = response.get('status', None)
+
+        if response:
+            if response == 'ok':
+                return True
+        return False
+
     """
     Restart the arbiter or a watcher:
         This command restart all the process in a watcher or all watchers
@@ -60,6 +75,19 @@ class Client(object):
     def restart(self, watcher='', waiting=False):
         assert(type(watcher), str)
         assert(type(waiting), bool)
+
+        restart_command = Dict()
+        restart_command.command = 'restart'
+        restart_command.properties.name = watcher
+        restart_command.properties.waiting = waiting
+
+        response = self._client.call(restart_command)
+        response = response.get('status', None)
+
+        if response:
+            if response == 'ok':
+                return True
+        return False
 
     """
     Remove a watcher:
@@ -70,18 +98,51 @@ class Client(object):
         assert(type(nonstop), bool)
         assert(type(waiting), bool)
 
+        rm_command = Dict()
+        rm_command.command = 'rm'
+        rm_command.properties.name = watcher
+        rm_command.properties.nonstop = nonstop
+        rm_command.properties.waiting = waiting
+
+        response = self._client.call(rm_command)
+        response = response.get('status', None)
+
+        if response:
+            if response == 'ok':
+                return True
+        return False
+
     """
     Get the number of watchers:
         Get the number of watchers in a arbiter
     """
     def numWatchers(self):
-        pass
+        numwatchers_command = Dict()
+        numwatchers_command.command = 'numwatchers'
+
+        response = self._client.call(numwatchers_command)
+        status = response.get('status', None)
+
+        if status:
+            if status == 'ok':
+                return response.get('numwatchers', 0)
+        return 0
 
     """
         Get list of watchers or processes in a watcher
     """
     def list(self, watcher=''):
         assert(type(watcher), str)
+
+        list_command = Dict()
+        list_command.command = 'list'
+
+        if watcher:
+            list_command.properties.name = watcher
+
+        response = self._client.call(list_command)
+        return [{'name':str(w)} for w in response['watchers']] if response['status'] == u'ok' else []
+
 
     """
     Start the arbiter or a watcher:
@@ -91,6 +152,19 @@ class Client(object):
         assert(type(watcher), str)
         assert(type(waiting), bool)
 
+        start_command = Dict()
+        start_command.command = 'start'
+        start_command.properties.name = watcher
+        start_command.properties.waiting = waiting
+
+        response = self._client.call(start_command)
+        response = response.get('status', None)
+
+        if response:
+            if response == 'ok':
+                return True
+        return False
+
     """
     Stop watchers:
         This command stops a given watcher or all watchers.
@@ -99,6 +173,19 @@ class Client(object):
         assert(type(watcher), str)
         assert(type(waiting), bool)
 
+        stop_command = Dict()
+        stop_command.command = 'stop'
+        stop_command.properties.name = watcher
+        stop_command.properties.waiting = waiting
+
+        response = self._client.call(stop_command)
+        response = response.get('status', None)
+
+        if response:
+            if response == 'ok':
+                return True
+        return False
+
     """
     Get the number of processes:
         Get the number of processes in a watcher or in a arbiter
@@ -106,9 +193,33 @@ class Client(object):
     def numProcesses(self, watcher):
         assert(type(watcher), str)
 
+        num_command = Dict()
+        num_command.command = 'numprocesses'
+        num_command.properties.name = watcher
+
+        response = self._client.call(num_command)
+        status = response.get('status', None)
+
+        if status:
+            if status == 'ok':
+                return response.get('numprocesses', 0)
+        return 0
+
     """
     Quit the arbiter immediately:
         When the arbiter receive this command, the arbiter exit.
     """
     def quit(self, waiting=False):
         assert(type(waiting), bool)
+
+        quit_command = Dict()
+        quit_command.command = 'quit'
+        quit_command.waiting = waiting
+
+        response = self._client.call(quit_command)
+        response = response.get('status', None)
+
+        if response:
+            if response == 'ok':
+                return True
+        return False
