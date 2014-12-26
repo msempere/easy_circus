@@ -2,6 +2,11 @@
 
 Easy python ZMQ client and library for Mozilla Circus
 
+## Install
+```
+python setup.py install
+```
+
 
 ## Circus commands:
 
