@@ -344,3 +344,29 @@ class Client(object):
             if response and response == 'ok':
                 return True
         return False
+
+    """
+    Set a watcher option
+    """
+    def set(self, watcher, options=[], waiting=False):
+        assert type(watcher) == str
+        assert type(options) == list
+        assert type(waiting) == bool
+
+        for option in options:
+            assert type(option) == tuple
+
+        set_command = Dict()
+        set_command.command = 'set'
+        set_command.properties.name = watcher
+
+        for option in options:
+            # TODO
+            set_command.properties.options[option[0]] = option[1]
+
+        response = self._client.call(set_command)
+        response = response.get('status', None)
+
+        if response and response == 'ok':
+            return True
+        return False
