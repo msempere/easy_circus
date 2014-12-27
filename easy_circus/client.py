@@ -15,7 +15,7 @@ class Client(object):
         self._timeout = timeout
         self._arbiter = get_arbiter([])
         self._arbiter.start()
-        self._client = CircusClient(timeout=self._timeout, endpoint='{0}:{1}'.format(self._host, self._port))
+        self._client = CircusClient(timeout=self._timeout, endpoint='tcp://{0}:{1}'.format(self._host, self._port))
 
     """
     Add a watcher:
