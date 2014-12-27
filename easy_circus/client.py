@@ -277,3 +277,23 @@ class Client(object):
                 return s
         return None
 
+    """
+    Reload the configuration file:
+        This command reloads the configuration file, so changes in the
+        configuration file will be reflected in the configuration of
+        circus.
+    """
+    def reload_configuration(self, waiting=False):
+        assert type(waiting) == bool
+
+        reload_command = Dict()
+        reload_command.command = 'reloadconfig'
+        reload_command.properties.waiting = waiting
+
+        response = self._client.call(reload_command)
+        response = response.get('status', None)
+
+        if response and response == 'ok':
+            return True
+        return False
+
