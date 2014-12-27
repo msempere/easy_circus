@@ -40,9 +40,8 @@ class Client(object):
         response = self._client.call(addWatcher_command)
         response = response.get('status', None)
 
-        if response:
-            if response == 'ok':
-                return True
+        if response and response == 'ok':
+            return True
         return False
 
 
@@ -66,9 +65,8 @@ class Client(object):
         response = self._client.call(reload_command)
         response = response.get('status', None)
 
-        if response:
-            if response == 'ok':
-                return True
+        if response and response == 'ok':
+            return True
         return False
 
     """
@@ -87,9 +85,8 @@ class Client(object):
         response = self._client.call(restart_command)
         response = response.get('status', None)
 
-        if response:
-            if response == 'ok':
-                return True
+        if response and response == 'ok':
+            return True
         return False
 
     """
@@ -110,9 +107,8 @@ class Client(object):
         response = self._client.call(rm_command)
         response = response.get('status', None)
 
-        if response:
-            if response == 'ok':
-                return True
+        if response and response == 'ok':
+            return True
         return False
 
     """
@@ -126,14 +122,14 @@ class Client(object):
         response = self._client.call(numwatchers_command)
         status = response.get('status', None)
 
-        if status:
-            if status == 'ok':
-                return response.get('numwatchers', 0)
+        if status and status == 'ok':
+            return response.get('numwatchers', 0)
         return 0
 
     """
         Get list of watchers or processes in a watcher
     """
+    # TODO pids not being shown when using a watcher
     def list(self, watcher=''):
         assert type(watcher) == str
 
@@ -168,9 +164,8 @@ class Client(object):
         response = self._client.call(start_command)
         response = response.get('status', None)
 
-        if response:
-            if response == 'ok':
-                return True
+        if response and response == 'ok':
+            return True
         return False
 
     """
@@ -189,9 +184,8 @@ class Client(object):
         response = self._client.call(stop_command)
         response = response.get('status', None)
 
-        if response:
-            if response == 'ok':
-                return True
+        if response and response == 'ok':
+            return True
         return False
 
     """
@@ -208,9 +202,8 @@ class Client(object):
         response = self._client.call(num_command)
         status = response.get('status', None)
 
-        if status:
-            if status == 'ok':
-                return response.get('numprocesses', 0)
+        if status and status == 'ok':
+            return response.get('numprocesses', 0)
         return 0
 
     """
@@ -227,9 +220,8 @@ class Client(object):
         response = self._client.call(quit_command)
         response = response.get('status', None)
 
-        if response:
-            if response == 'ok':
-                return True
+        if response and response == 'ok':
+            return True
         return False
 
     """
@@ -241,21 +233,21 @@ class Client(object):
         stats_command.command = 'dstats'
 
         response = self._client.call(stats_command)
-        response = response.get('status', None)
+        status = response.get('status', None)
 
-        if response:
-            if response == 'ok':
+        if status and status == 'ok':
+            if response.get('info', None):
                 stats = Dict()
-                stats.children = response.get('children', None)
-                stats.cmdline = response.get('cmdline', None)
-                stats.cpu = response.get('cpu', None)
-                stats.ctime = response.get('ctime', None)
-                stats.mem = response.get('mem', None)
-                stats.mem_info1 = response('mem_info1', None)
-                stats.mem_info2 = response('mem_info2', None)
-                stats.nice = response('nice', None)
-                stats.pid = response('pid', None)
-                stats.username = response.get('username', None)
+                stats.children = list(response['info'].get('children', None))
+                stats.cmdline = str(response['info'].get('cmdline', None))
+                stats.cpu = float(response['info'].get('cpu', None))
+                stats.ctime = str(response['info'].get('ctime', None))
+                stats.mem = float(response['info'].get('mem', None))
+                stats.mem_info1 = str(response['info'].get('mem_info1', None))
+                stats.mem_info2 = str(response['info'].get('mem_info2', None))
+                stats.nice = int(response['info'].get('nice', None))
+                stats.pid = int(response['info'].get('pid', None))
+                stats.username = str(response['info'].get('username', None))
                 return stats
         return {}
 
