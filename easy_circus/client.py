@@ -297,3 +297,50 @@ class Client(object):
             return True
         return False
 
+    """"
+    Send a signal:
+        This command allows you to send a signal to all processes in a watcher,
+        a specific process in a watcher or its children.
+    """
+    def send_signal(self, watcher, signum, pid=0, children=False, childpid=0, recursive=False):
+        assert type(watcher) == str
+        assert type(signum) == int
+        assert type(pid) == int
+        assert type(childpid) == int
+        assert type(children) == bool
+        assert type(recursive) == bool
+
+        correct = False
+        signal_command = Dict()
+        signal_command.command = 'signal'
+        signal_command.properties.name = watcher
+        signal_command.properties.signum = signum
+
+        if pid == 0 and not children and childpid == 0 and not recursive:
+            correct = True
+
+        elif pid > 0 and not children and childpid == 0 and not recursive:
+            signal_command.properties.pid = pid
+
+        elif pid > 0 and children and childpid == 0 and not recursive:
+            signal_command.properties.pid = pid
+            signal_command.properties.children = True
+
+        elif pid > 0 and not children and childpid > 0 and not recursive:
+            signal_command.properties.pid = pid
+            signal_command.properties.childpid = childpid
+
+        elif pid == 0 and not children and childpid == 0 and not recursive:
+            signal_command.properties.children = True
+
+        elif pid == 0 and not children and childpid == 0 and recursive:
+            signal_command.properties.children = children
+            signal_command.properties.recursive = True
+
+        if correct:
+            response = self._client.call(signal_command)
+            response = response.get('status', None)
+
+            if response and response == 'ok':
+                return True
+        return False
