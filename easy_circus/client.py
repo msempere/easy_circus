@@ -7,9 +7,9 @@ from circus import get_arbiter
 class Client(object):
 
     def __init__(self, host, port, timeout=15):
-        assert(type(host), str)
-        assert(type(port), int)
-        assert(type(timeout), int)
+        assert type(host) == str
+        assert type(port) == int
+        assert type(timeout) == int
         self._host = host
         self._port = port
         self._timeout = timeout
@@ -22,10 +22,10 @@ class Client(object):
         This command add a watcher dynamically to a arbiter
     """
     def addWatcher(self, name, command, args=[], autostart=False):
-        assert(type(name), str)
-        assert(type(command), str)
-        assert(type(args), list)
-        assert(type(autostart), bool)
+        assert type(name) == str
+        assert type(command) == str
+        assert type(args) == list
+        assert type(autostart) == bool
 
         addWatcher_command = Dict()
         addWatcher_command.command = 'add'
@@ -48,10 +48,10 @@ class Client(object):
         This command reloads all the process in a watcher or all watchers
     """
     def reload(self, watcher='', graceful=True, sequential=False, waiting=False):
-        assert(type(watcher), str)
-        assert(type(graceful), bool)
-        assert(type(sequential), bool)
-        assert(type(waiting), bool)
+        assert type(watcher) == str
+        assert type(graceful) == bool
+        assert type(sequential) == bool
+        assert type(waiting) == bool
 
         reload_command = Dict()
         reload_command.command = 'reload'
@@ -73,8 +73,8 @@ class Client(object):
         This command restart all the process in a watcher or all watchers
     """
     def restart(self, watcher='', waiting=False):
-        assert(type(watcher), str)
-        assert(type(waiting), bool)
+        assert type(watcher) == str
+        assert type(waiting) == bool
 
         restart_command = Dict()
         restart_command.command = 'restart'
@@ -94,9 +94,9 @@ class Client(object):
         This command removes a watcher dynamically from the arbiter
     """
     def rmWatcher(self, watcher, nonstop=False, waiting=False):
-        assert(type(watcher), str)
-        assert(type(nonstop), bool)
-        assert(type(waiting), bool)
+        assert type(watcher) == str
+        assert type(nonstop) == bool
+        assert type(waiting) == bool
 
         rm_command = Dict()
         rm_command.command = 'rm'
@@ -132,7 +132,7 @@ class Client(object):
         Get list of watchers or processes in a watcher
     """
     def list(self, watcher=''):
-        assert(type(watcher), str)
+        assert type(watcher) == str
 
         list_command = Dict()
         list_command.command = 'list'
@@ -149,8 +149,8 @@ class Client(object):
         This command starts all the processes in a watcher or all watchers.
     """
     def start(self, watcher='', waiting=False):
-        assert(type(watcher), str)
-        assert(type(waiting), bool)
+        assert type(watcher) == str
+        assert type(waiting) == bool
 
         start_command = Dict()
         start_command.command = 'start'
@@ -170,8 +170,8 @@ class Client(object):
         This command stops a given watcher or all watchers.
     """
     def stop(self, watcher='', waiting=False):
-        assert(type(watcher), str)
-        assert(type(waiting), bool)
+        assert type(watcher) == str
+        assert type(waiting) == bool
 
         stop_command = Dict()
         stop_command.command = 'stop'
@@ -191,7 +191,7 @@ class Client(object):
         Get the number of processes in a watcher or in a arbiter
     """
     def numProcesses(self, watcher):
-        assert(type(watcher), str)
+        assert type(watcher) == str
 
         num_command = Dict()
         num_command.command = 'numprocesses'
@@ -210,7 +210,7 @@ class Client(object):
         When the arbiter receive this command, the arbiter exit.
     """
     def quit(self, waiting=False):
-        assert(type(waiting), bool)
+        assert type(waiting) == bool
 
         quit_command = Dict()
         quit_command.command = 'quit'
@@ -256,7 +256,7 @@ class Client(object):
         This command start get the status of a watcher or all watchers
     """
     def status(self, watcher=''):
-        assert(type(watcher), str)
+        assert type(watcher) == str
 
         status_command = Dict()
         status_command.command = 'status'
