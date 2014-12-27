@@ -62,5 +62,29 @@ True
  True
  ```
  
+ * status: Get the status of a watcher or all watchers
  
-
+ Watcher:
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.status(watcher="a_watcher")
+ 'stopped'
+ ```
+ 
+ All watchers:
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.status()
+ [{'status': 'stopped', 'name': 'another_watcher'}, {'status': 'stopped', 'name': 'a_watcher'}]
+ ```
+ 
+* start: Start the arbiter or a watcher
+ 
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.start(watcher="a_watcher")
+ True
+ ```
