@@ -1,4 +1,4 @@
-# Easy_circus 
+# Easy_circus [![Build Status](https://travis-ci.org/msempere/easy_circus.svg?branch=master)] (https://travis-ci.org/msempere/easy_circus)
 
 Easy python ZMQ client and library for Mozilla Circus
 
