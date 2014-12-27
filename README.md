@@ -1,6 +1,11 @@
-# Easy_circus [![Build Status](https://travis-ci.org/msempere/circus_client_cpp.svg?branch=master)] (http://travis-ci.org/msempere/circus_client_cpp)
+# Easy_circus 
 
 Easy python ZMQ client and library for Mozilla Circus
+
+## Install
+```
+python setup.py install
+```
 
 
 ## Circus commands:
@@ -19,10 +24,31 @@ Easy python ZMQ client and library for Mozilla Circus
  client.list(watcher="a_watcher")
  ```
  
-  List of watchers:
+ List of watchers:
  ```python
  client = easy_circus.Client(host='127.0.0.1', port=5555, timeout=15)
  client.list()
  ```
+ 
+ * quit: Quit the arbiter immediately
+ ```python
+ client = easy_circus.Client(host='127.0.0.1', port=5555, timeout=15)
+ client.quit()
+ ```
+ 
+ * stop: Stop the arbiter or a watcher
+ 
+ Stop the arbiter:
+ ```python
+ client = easy_circus.Client(host='127.0.0.1', port=5555, timeout=15)
+ client.stop()
+ ```
+ 
+ Stop a watcher:
+ ```python
+ client = easy_circus.Client(host='127.0.0.1', port=5555, timeout=15)
+ client.stop(watcher="a_watcher")
+ ```
+ 
  
 
