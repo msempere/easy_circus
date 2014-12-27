@@ -223,3 +223,54 @@ class Client(object):
             if response == 'ok':
                 return True
         return False
+
+    """
+    Get circusd stats:
+       You can get at any time some statistics about circus with the dstat command.
+    """
+    def dstats(self):
+        stats_command = Dict()
+        stats_command.command = 'dstats'
+
+        response = self._client.call(stats_command)
+        response = response.get('status', None)
+
+        if response:
+            if response == 'ok':
+                stats = Dict()
+                stats.children = response.get('children', None)
+                stats.cmdline = response.get('cmdline', None)
+                stats.cpu = response.get('cpu', None)
+                stats.ctime = response.get('ctime', None)
+                stats.mem = response.get('mem', None)
+                stats.mem_info1 = response('mem_info1', None)
+                stats.mem_info2 = response('mem_info2', None)
+                stats.nice = response('nice', None)
+                stats.pid = response('pid', None)
+                stats.username = response.get('username', None)
+                return stats
+        return {}
+
+    """
+    Get the status of a watcher or all watchers:
+        This command start get the status of a watcher or all watchers
+    """
+    def status(self, watcher=''):
+        assert(type(watcher), str)
+
+        status_command = Dict()
+        status_command.command = 'status'
+        status_command.properties.name = watcher
+
+        response = self._client.call(status_command)
+
+        if response:
+            if watcher and response.get('statuses', None):
+                s = {}
+                for w in response['statuses']:
+                    s[w['name']] = w['status']
+                return s
+            else:
+                return response.get('status', None)
+        return None
+
