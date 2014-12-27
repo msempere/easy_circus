@@ -3,6 +3,7 @@
 from addict import Dict
 from circus.client import CircusClient
 from circus import get_arbiter
+from ast import literal_eval
 
 class Client(object):
 
@@ -141,12 +142,15 @@ class Client(object):
 
         if watcher:
             list_command.properties.name = watcher
-
-        response = self._client.call(list_command)
-        return [{'name':str(w)}
-                for w
-                in response['watchers']] if response['status'] == u'ok' else []
-
+            response = self._client.call(list_command)
+            return [int(pid)
+                    for pid
+                    in response['pids']] if response['status'] == u'ok' else []
+        else:
+            response = self._client.call(list_command)
+            return [str(w)
+                    for w
+                    in response['watchers']] if response['status'] == u'ok' else []
 
     """
     Start the arbiter or a watcher:
@@ -264,17 +268,20 @@ class Client(object):
 
         status_command = Dict()
         status_command.command = 'status'
-        status_command.properties.name = watcher
 
-        response = self._client.call(status_command)
+        if watcher:
+            status_command.properties.name = watcher
+            response = self._client.call(status_command)
+            if response.get('status', None):
+                return str(response['status'])
+        else:
+            response = self._client.call(status_command)
+            if response.get('statuses', None):
+                s = []
+                watchers = literal_eval(str(response[u'statuses']))
 
-        if response:
-            if watcher and response.get('statuses', None):
-                s = {}
                 for w in response['statuses']:
-                    s[w['name']] = w['status']
+                    s.append({'name':str(w), 'status':str(watchers[w])})
                 return s
-            else:
-                return response.get('status', None)
         return None
 
