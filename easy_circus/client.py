@@ -15,13 +15,15 @@ class Client(object):
         self._timeout = timeout
         self._arbiter = get_arbiter([])
         self._arbiter.start()
-        self._client = CircusClient(timeout=self._timeout, endpoint='tcp://{0}:{1}'.format(self._host, self._port))
+        self._client = CircusClient(timeout=self._timeout,
+                                    endpoint='tcp://{0}:{1}'.format(self._host,
+                                                                    self._port))
 
     """
     Add a watcher:
         This command add a watcher dynamically to a arbiter
     """
-    def addWatcher(self, name, command, args=[], autostart=False):
+    def add_watcher(self, name, command, args=[], autostart=False):
         assert type(name) == str
         assert type(command) == str
         assert type(args) == list
@@ -93,7 +95,7 @@ class Client(object):
     Remove a watcher:
         This command removes a watcher dynamically from the arbiter
     """
-    def rmWatcher(self, watcher, nonstop=False, waiting=False):
+    def rm_watcher(self, watcher, nonstop=False, waiting=False):
         assert type(watcher) == str
         assert type(nonstop) == bool
         assert type(waiting) == bool
@@ -116,7 +118,7 @@ class Client(object):
     Get the number of watchers:
         Get the number of watchers in a arbiter
     """
-    def numWatchers(self):
+    def num_watchers(self):
         numwatchers_command = Dict()
         numwatchers_command.command = 'numwatchers'
 
@@ -141,7 +143,9 @@ class Client(object):
             list_command.properties.name = watcher
 
         response = self._client.call(list_command)
-        return [{'name':str(w)} for w in response['watchers']] if response['status'] == u'ok' else []
+        return [{'name':str(w)}
+                for w
+                in response['watchers']] if response['status'] == u'ok' else []
 
 
     """
@@ -190,7 +194,7 @@ class Client(object):
     Get the number of processes:
         Get the number of processes in a watcher or in a arbiter
     """
-    def numProcesses(self, watcher):
+    def num_processes(self, watcher):
         assert type(watcher) == str
 
         num_command = Dict()
