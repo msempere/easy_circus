@@ -389,3 +389,40 @@ class Client(object):
                 return stats
         return {}
 
+    """
+    Get the value of all options for a watcher:
+        This command returns all option values for a given watcher.
+    """
+    def options(self, watcher):
+        assert type(watcher) == str
+
+        options_command = Dict()
+        options_command.command = 'options'
+        options_command.properties.name = watcher
+
+        response = self._client.call(options_command)
+        status = response.get('status', None)
+
+        if status and status == 'ok':
+            if response.get('options', None):
+                options = Dict()
+                options.numprocesses = int(response['options'].get('numprocesses', None))
+                options.warmup_delay = float(response['options'].get('warmup_delay', None))
+                options.working_dir = str(response['options'].get('working_dir', None))
+                options.uid = str(response['options'].get('uid', None))
+                options.gid = str(response['options'].get('gid', None))
+                options.send_hup = bool(response['options'].get('send_hup', None))
+                options.shell = bool(response['options'].get('shell', None))
+                options.cmd = str(response['options'].get('cmd', None))
+                options.retry_in = int(response['options'].get('retry_in', None))
+                options.max_retry = int(response['options'].get('max_retry', None))
+                options.graceful_timeout = int(response['options'].get('graceful_timeout', None))
+                options.singleton = bool(response['options'].get('singleton', None))
+                options.max_retry = int(response['options'].get('max_retry', None))
+                options.env = literal_eval(str(response['options'].get('env', None)))
+                options.max_age = int(response['options'].get('max_age', None))
+                options.max_age_variance = int(response['options'].get('max_age_variance', None))
+                options.priority = int(response['options'].get('priority', None))
+                return options
+        return {}
+
