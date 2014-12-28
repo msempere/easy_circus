@@ -237,18 +237,7 @@ class Client(object):
 
         if status and status == 'ok':
             if response.get('info', None):
-                stats = Dict()
-                stats.children = list(response['info'].get('children', None))
-                stats.cmdline = str(response['info'].get('cmdline', None))
-                stats.cpu = float(response['info'].get('cpu', None))
-                stats.ctime = str(response['info'].get('ctime', None))
-                stats.mem = float(response['info'].get('mem', None))
-                stats.mem_info1 = str(response['info'].get('mem_info1', None))
-                stats.mem_info2 = str(response['info'].get('mem_info2', None))
-                stats.nice = int(response['info'].get('nice', None))
-                stats.pid = int(response['info'].get('pid', None))
-                stats.username = str(response['info'].get('username', None))
-                return stats
+                return literal_eval(str(response['info']))
         return {}
 
     """
@@ -375,18 +364,7 @@ class Client(object):
 
         if status and status == 'ok':
             if response.get('info', None):
-                stats = Dict()
-                stats.children = list(response['info'].get('children', None))
-                stats.cmdline = str(response['info'].get('cmdline', None))
-                stats.cpu = float(response['info'].get('cpu', None))
-                stats.ctime = str(response['info'].get('ctime', None))
-                stats.mem = float(response['info'].get('mem', None))
-                stats.mem_info1 = str(response['info'].get('mem_info1', None))
-                stats.mem_info2 = str(response['info'].get('mem_info2', None))
-                stats.nice = int(response['info'].get('nice', None))
-                stats.pid = int(response['info'].get('pid', None))
-                stats.username = str(response['info'].get('username', None))
-                return stats
+                return literal_eval(str(response['info']))
         return {}
 
     """
@@ -405,25 +383,7 @@ class Client(object):
 
         if status and status == 'ok':
             if response.get('options', None):
-                options = Dict()
-                options.numprocesses = int(response['options'].get('numprocesses', None))
-                options.warmup_delay = float(response['options'].get('warmup_delay', None))
-                options.working_dir = str(response['options'].get('working_dir', None))
-                options.uid = str(response['options'].get('uid', None))
-                options.gid = str(response['options'].get('gid', None))
-                options.send_hup = bool(response['options'].get('send_hup', None))
-                options.shell = bool(response['options'].get('shell', None))
-                options.cmd = str(response['options'].get('cmd', None))
-                options.retry_in = int(response['options'].get('retry_in', None))
-                options.max_retry = int(response['options'].get('max_retry', None))
-                options.graceful_timeout = int(response['options'].get('graceful_timeout', None))
-                options.singleton = bool(response['options'].get('singleton', None))
-                options.max_retry = int(response['options'].get('max_retry', None))
-                options.env = literal_eval(str(response['options'].get('env', None)))
-                options.max_age = int(response['options'].get('max_age', None))
-                options.max_age_variance = int(response['options'].get('max_age_variance', None))
-                options.priority = int(response['options'].get('priority', None))
-                return options
+                return literal_eval(str(response['options']))
         return {}
 
     """
@@ -476,8 +436,8 @@ class Client(object):
     Get the arbiter options:
         This command return the arbiter options
     """
-    def global_options(self, globaloptions=[]):
-        assert type(globaloptions) == list
+    def global_options(self, options=[]):
+        assert type(options) == list
 
         global_options_command = Dict()
         global_options_command.command = 'globaloptions'
@@ -487,19 +447,36 @@ class Client(object):
 
         if status and status == 'ok':
             if response.get('options', None):
-                options = Dict()
-                options.endpoint = str(response['options'].get('endpoint', None))
-                options.pubsub_endpoint = str(response['options'].get('pubsub_endpoint', None))
-                options.check_delay = int(response['options'].get('check_delay', None))
-                options.multicast_endpoint = str(response['options'].get('multicast_endpoint', None))
+                _options =  literal_eval(str(response['options']))
 
-                if globaloptions:
+                if options:
                     selected_options = Dict()
-                    for option in globaloptions:
+                    for option in options:
                         if option in ("endpoint", "pubsub_endpoint", "check_delay", "multicast_endpoint"):
-                            selected_options[option] = options[option]
+                            selected_options[option] = _options[option]
                     return selected_options
                 else:
-                    return options
+                    return _options
         return {}
 
+    """
+    Get the value of specific watcher options:
+        This command can be used to query the current value of one or more watcher options.
+    """
+    def get(self, watcher, options=[]):
+        assert type(watcher) == str
+        assert type(options) == list and options
+
+        get_command = Dict()
+        get_command.command = 'get'
+        get_command.properties.name = watcher
+        get_command.properties['keys'] = options
+
+
+        response = self._client.call(get_command)
+        status = response.get('status', None)
+
+        if status and status == 'ok':
+            if response.get('options', None):
+                return literal_eval(str(response['options']))
+        return {}
