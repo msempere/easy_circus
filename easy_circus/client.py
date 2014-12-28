@@ -476,7 +476,9 @@ class Client(object):
     Get the arbiter options:
         This command return the arbiter options
     """
-    def global_options(self):
+    def global_options(self, globaloptions=[]):
+        assert type(globaloptions) == list
+
         global_options_command = Dict()
         global_options_command.command = 'globaloptions'
 
@@ -490,6 +492,14 @@ class Client(object):
                 options.pubsub_endpoint = str(response['options'].get('pubsub_endpoint', None))
                 options.check_delay = int(response['options'].get('check_delay', None))
                 options.multicast_endpoint = str(response['options'].get('multicast_endpoint', None))
-                return options
+
+                if globaloptions:
+                    selected_options = Dict()
+                    for option in globaloptions:
+                        if option in ("endpoint", "pubsub_endpoint", "check_delay", "multicast_endpoint"):
+                            selected_options[option] = options[option]
+                    return selected_options
+                else:
+                    return options
         return {}
 
