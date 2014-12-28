@@ -10,7 +10,7 @@ python setup.py install
 
 ## Circus commands:
 
- * add: Add a watcher
+ * **add**: Add a watcher
  ```python
  >>> from easy_circus.client import Client
  >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
@@ -18,7 +18,7 @@ python setup.py install
 True
  ```
 
- * list: Get list of watchers or processes in a watcher
+ * **list**: Get list of watchers or processes in a watcher
  
  Processes in a watcher:
  ```python
@@ -36,7 +36,7 @@ True
  ['a_watcher', 'another_watcher']
  ```
  
- * quit: Quit the arbiter immediately
+ * **quit**: Quit the arbiter immediately
  ```python
  >>> from easy_circus.client import Client
  >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
@@ -44,7 +44,7 @@ True
  True
  ```
  
- * stop: Stop the arbiter or a watcher
+ * **stop**: Stop the arbiter or a watcher
  
  Stop the arbiter:
  ```python
@@ -62,7 +62,7 @@ True
  True
  ```
  
- * status: Get the status of a watcher or all watchers
+ * **status**: Get the status of a watcher or all watchers
  
  Watcher:
  ```python
@@ -80,7 +80,7 @@ True
  [{'status': 'stopped', 'name': 'another_watcher'}, {'status': 'stopped', 'name': 'a_watcher'}]
  ```
  
-* start: Start the arbiter or a watcher
+* **start**: Start the arbiter or a watcher
  
  ```python
  >>> from easy_circus.client import Client
