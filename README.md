@@ -6,11 +6,34 @@ Easy python ZMQ client and library for Mozilla Circus
 ```
 python setup.py install
 ```
+## Supported Commands:
+
+* add
+* decr
+* dstats
+* get
+* globaloptions
+* incr
+* list
+* numprocesses
+* numwatchers
+* options
+* quit
+* reload
+* reloadconfig
+* restart
+* rm
+* set
+* signal
+* start
+* stats
+* status
+* stop
 
 
-## Circus commands:
+## Commands usage:
 
- * **add**: Add a watcher
+ * **ADD**: Add a watcher
  ```python
  >>> from easy_circus.client import Client
  >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
@@ -18,7 +41,7 @@ python setup.py install
 True
  ```
 
- * **list**: Get list of watchers or processes in a watcher
+ * **LIST**: Get list of watchers or processes in a watcher
  
  Processes in a watcher:
  ```python
@@ -36,7 +59,7 @@ True
  ['a_watcher', 'another_watcher']
  ```
  
- * **quit**: Quit the arbiter immediately
+ * **QUIT**: Quit the arbiter immediately
  ```python
  >>> from easy_circus.client import Client
  >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
@@ -44,7 +67,7 @@ True
  True
  ```
  
- * **stop**: Stop the arbiter or a watcher
+ * **STOP**: Stop the arbiter or a watcher
  
  Stop the arbiter:
  ```python
@@ -62,7 +85,7 @@ True
  True
  ```
  
- * **status**: Get the status of a watcher or all watchers
+ * **STATUS**: Get the status of a watcher or all watchers
  
  Watcher:
  ```python
@@ -80,11 +103,37 @@ True
  [{'status': 'stopped', 'name': 'another_watcher'}, {'status': 'stopped', 'name': 'a_watcher'}]
  ```
  
-* **start**: Start the arbiter or a watcher
+* **START**: Start the arbiter or a watcher
  
  ```python
  >>> from easy_circus.client import Client
  >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
  >>> client.start(watcher="a_watcher")
  True
+ ```
+
+* **DSTATS**: Get circusd stats
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.dstats()
+{"children": [ ], "cmdline": "python", "cpu": 0.1, "ctime": "0:00.41", "mem": 0.1, "mem_info1": "3M", "mem_info2": "2G", "nice": 0, "pid": 47864, "username": "root"}
+```
+
+* **GET**: Get the value of specific watcher options
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.get(["graceful_timeout", "send_hup"])
+ {"graceful_timeout": 300, "send_hup": True}
+ ```
+ 
+* **GLOBALOPTIONS**: Get the arbiter options
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.global_options()
+ {"pubsub_endpoint": "tcp://127.0.0.1:5556", "stats_endpoint": "tcp://127.0.0.1:5557", "endpoint: tcp://127.0.0.1:5555", "multicast_endpoint: udp://222.222.222.222:12027", "check_delay": 5.0}
+ >>> client.global_options(["check_delay"])
+ {"check_delay": 5.0}
  ```
