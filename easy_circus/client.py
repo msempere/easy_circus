@@ -310,39 +310,21 @@ class Client(object):
         assert type(children) == bool
         assert type(recursive) == bool
 
-        correct = False
         signal_command = Dict()
         signal_command.command = 'signal'
         signal_command.properties.name = watcher
         signal_command.properties.signum = signum
+        signal_command.properties.pid = pid if pid > 0 else ''
+        signal_command.properties.children = children
+        signal_command.properties.childpid = childpid if childpid > 0 else ''
+        signal_command.properties.recursive = recursive
 
-        if pid == 0 and not children and childpid == 0 and not recursive:
-            correct = True
+        signal_command.prune()
+        response = self._client.call(signal_command)
+        response = response.get('status', None)
 
-        elif pid > 0 and not children and childpid == 0 and not recursive:
-            signal_command.properties.pid = pid
-
-        elif pid > 0 and children and childpid == 0 and not recursive:
-            signal_command.properties.pid = pid
-            signal_command.properties.children = True
-
-        elif pid > 0 and not children and childpid > 0 and not recursive:
-            signal_command.properties.pid = pid
-            signal_command.properties.childpid = childpid
-
-        elif pid == 0 and not children and childpid == 0 and not recursive:
-            signal_command.properties.children = True
-
-        elif pid == 0 and not children and childpid == 0 and recursive:
-            signal_command.properties.children = children
-            signal_command.properties.recursive = True
-
-        if correct:
-            response = self._client.call(signal_command)
-            response = response.get('status', None)
-
-            if response and response == 'ok':
-                return True
+        if response and response == 'ok':
+            return True
         return False
 
     """
@@ -361,7 +343,6 @@ class Client(object):
         set_command.properties.name = watcher
 
         for option in options:
-            # TODO
             set_command.properties.options[option[0]] = option[1]
 
         response = self._client.call(set_command)
@@ -370,3 +351,41 @@ class Client(object):
         if response and response == 'ok':
             return True
         return False
+
+    """
+    Get process infos:
+       You can get at any time some statistics about your processes
+       with the stat command.
+    """
+    def stats(self, watcher, process='', extended=False):
+        assert type(watcher) == str
+        assert type(process) == str
+        assert type(extended) == bool
+
+        stats_command = Dict()
+        stats_command.command = 'stats'
+        stats_command.properties.name = watcher
+
+        if process:
+            stats_command.properties.process = process
+            stats_command.properties.extended = extended
+
+        response = self._client.call(stats_command)
+        status = response.get('status', None)
+
+        if status and status == 'ok':
+            if response.get('info', None):
+                stats = Dict()
+                stats.children = list(response['info'].get('children', None))
+                stats.cmdline = str(response['info'].get('cmdline', None))
+                stats.cpu = float(response['info'].get('cpu', None))
+                stats.ctime = str(response['info'].get('ctime', None))
+                stats.mem = float(response['info'].get('mem', None))
+                stats.mem_info1 = str(response['info'].get('mem_info1', None))
+                stats.mem_info2 = str(response['info'].get('mem_info2', None))
+                stats.nice = int(response['info'].get('nice', None))
+                stats.pid = int(response['info'].get('pid', None))
+                stats.username = str(response['info'].get('username', None))
+                return stats
+        return {}
+
