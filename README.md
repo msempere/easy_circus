@@ -133,7 +133,127 @@ True
  >>> from easy_circus.client import Client
  >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
  >>> client.global_options()
- {"pubsub_endpoint": "tcp://127.0.0.1:5556", "stats_endpoint": "tcp://127.0.0.1:5557", "endpoint": "tcp://127.0.0.1:5555", "multicast_endpoint": "udp://222.222.222.222:12027", "check_delay": 5.0}
+ {"pubsub_endpoint": "tcp://127.0.0.1:5556", "stats_endpoint": "tcp://127.0.0.1:5557", "endpoint":  "tcp://127.0.0.1:5555", "multicast_endpoint": "udp://222.222.222.222:12027", "check_delay": 5.0}
  >>> client.global_options(options=["check_delay", "multicast_endpoint"])
  {"check_delay": 5.0, "multicast_endpoint": "udp://222.222.222.222:12027"}
+ ```
+ 
+* **RM**: Remove a watcher
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.rm_watcher(watcher="a_watcher")
+ True
+ ```
+ 
+* **RESTART**: Restart the arbiter or a watcher
+ 
+ Arbiter:
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.restart()
+ True
+ ```
+ 
+ Watcher:
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.restart(watcher="a_watcher")
+ True
+ ```
+
+* **RELOADCONFIG**: Reload the configuration file
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.reload_configuration()
+ True
+ ```
+ 
+* **RELOAD**: Reload the arbiter or a watcher
+ 
+ Arbiter:
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.reload()
+ True
+ ```
+ 
+ Watcher:
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.reload(watcher="a_watcher")
+ True
+ ```
+ 
+* **OPTIONS**: Get the value of all options for a watcher
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.options(watcher="a_watcher")
+{'singleton': False, 'send_hup': False, 'uid': None, 'max_age_variance': 30, 'close_child_stdout': False, 'stderr_stream_conf': None, 'max_retry': 5, 'max_age': 0, 'executable': None, 'graceful_timeout': 30.0, 'copy_env': False, 'use_sockets': False, 'priority': 0, 'working_dir': '/home/msempere/apps/easy_circus', 'gid': None, 'env': None, 'close_child_stderr': False, 'shell': False, 'args': ['-la', '/home'], 'warmup_delay': 0.0, 'on_demand': False, 'stop_signal': 15, 'cmd': 'ls', 'shell_args': None, 'stdout_stream_conf': None, 'numprocesses': 1, 'stop_children': False}
+ ```
+ 
+* **NUMWATCHERS**: Get the number of watchers
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.num_watchers()
+ 2
+ ```
+ 
+* **NUMPROCESSES**: Get the number of processes
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.num_processes()
+ 2
+ ```
+ 
+* **SET**: Set a watcher option
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.set(watcher="a_watcher", options=[("shell", True), ("working_dir", "/home")])
+ True
+ ```
+ 
+* **SIGNAL**: Send a signal
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.send_signal(watcher="a_watcher", signum=9)
+ True
+ ```
+ 
+* **STATS**: Get process infos
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.stats()`
+ {"children": [], "cmdline": "python", "cpu": 0.1, "ctime": "0:00.41", "mem": 0.1, "mem_info1": "3M", "mem_info2", "2G", "nice": 0, "pid": 47864, "username": "root"}
+ ```
+ 
+* **INCR**: Increment the number of processes in a watcher
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.num_processes()
+ 2
+ >>> client.incr(watcher="a_watcher", num=2)
+ 4
+ ```
+ 
+* **decr**: Decrement the number of processes in a watcher
+ ```python
+ >>> from easy_circus.client import Client
+ >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
+ >>> client.num_processes()
+ 4
+ >>> client.decr(watcher="a_watcher", num=1)
+ 3
  ```
