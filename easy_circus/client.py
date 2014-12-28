@@ -9,8 +9,8 @@ class Client(object):
 
     def __init__(self, host, port, timeout=15):
         assert type(host) == str
-        assert type(port) == int
-        assert type(timeout) == int
+        assert type(port) == int and port >= 0 and port <= 65535
+        assert type(timeout) == int and timeout > 0
         self._host = host
         self._port = port
         self._timeout = timeout
@@ -304,9 +304,9 @@ class Client(object):
     """
     def send_signal(self, watcher, signum, pid=0, children=False, childpid=0, recursive=False):
         assert type(watcher) == str
-        assert type(signum) == int
-        assert type(pid) == int
-        assert type(childpid) == int
+        assert type(signum) == int and signum > 0 and signum < 32
+        assert type(pid) == int and pid >= 0
+        assert type(childpid) == int and childpid >= 0
         assert type(children) == bool
         assert type(recursive) == bool
 
@@ -423,6 +423,73 @@ class Client(object):
                 options.max_age = int(response['options'].get('max_age', None))
                 options.max_age_variance = int(response['options'].get('max_age_variance', None))
                 options.priority = int(response['options'].get('priority', None))
+                return options
+        return {}
+
+    """
+    Increment the number of processes in a watcher:
+        This comment increment the number of processes in a watcher by num.
+    """
+    def inc(self, watcher, num=1, waiting=False):
+        assert type(watcher) == str
+        assert type(num) == int and num > 0
+        assert type(waiting) == bool
+
+        inc_command = Dict()
+        inc_command.command = 'incr'
+        inc_command.properties.name = watcher
+        inc_command.properties.nb = num
+        inc_command.properties.waiting = waiting
+
+        response = self._client.call(inc_command)
+        status = response.get('status', None)
+
+        if status and status == 'ok':
+            if response.get('numprocesses', None):
+                return response['numprocesses']
+        return 0
+
+    """
+    Decrement the number of processes in a watcher:
+        This comment decrement the number of processes in a watcher by num
+    """
+    def decr(self, watcher, num=1, waiting=False):
+        assert type(watcher) == str
+        assert type(num) == int and num > 0
+        assert type(waiting) == bool
+
+        decr_command = Dict()
+        decr_command.command = 'decr'
+        decr_command.properties.name = watcher
+        decr_command.properties.nb = num
+        decr_command.properties.waiting = waiting
+
+        response = self._client.call(decr_command)
+        status = response.get('status', None)
+
+        if status and status == 'ok':
+            if response.get('numprocesses', None):
+                return response['numprocesses']
+        return 0
+
+    """
+    Get the arbiter options:
+        This command return the arbiter options
+    """
+    def global_options(self):
+        global_options_command = Dict()
+        global_options_command.command = 'globaloptions'
+
+        response = self._client.call(global_options_command)
+        status = response.get('status', None)
+
+        if status and status == 'ok':
+            if response.get('options', None):
+                options = Dict()
+                options.endpoint = str(response['options'].get('endpoint', None))
+                options.pubsub_endpoint = str(response['options'].get('pubsub_endpoint', None))
+                options.check_delay = int(response['options'].get('check_delay', None))
+                options.multicast_endpoint = str(response['options'].get('multicast_endpoint', None))
                 return options
         return {}
 
