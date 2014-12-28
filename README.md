@@ -6,11 +6,34 @@ Easy python ZMQ client and library for Mozilla Circus
 ```
 python setup.py install
 ```
+## Supported Commands:
+
+* add
+* decr
+* dstats
+* get
+* globaloptions
+* incr
+* list
+* numprocesses
+* numwatchers
+* options
+* quit
+* reload
+* reloadconfig
+* restart
+* rm
+* set
+* signal
+* start
+* stats
+* status
+* stop
 
 
-## Circus commands:
+## Commands usage:
 
- * **add**: Add a watcher
+ * **ADD**: Add a watcher
  ```python
  >>> from easy_circus.client import Client
  >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
@@ -18,7 +41,7 @@ python setup.py install
 True
  ```
 
- * **list**: Get list of watchers or processes in a watcher
+ * **LIST**: Get list of watchers or processes in a watcher
  
  Processes in a watcher:
  ```python
@@ -36,7 +59,7 @@ True
  ['a_watcher', 'another_watcher']
  ```
  
- * **quit**: Quit the arbiter immediately
+ * **QUIT**: Quit the arbiter immediately
  ```python
  >>> from easy_circus.client import Client
  >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
@@ -44,7 +67,7 @@ True
  True
  ```
  
- * **stop**: Stop the arbiter or a watcher
+ * **STOP**: Stop the arbiter or a watcher
  
  Stop the arbiter:
  ```python
@@ -62,7 +85,7 @@ True
  True
  ```
  
- * **status**: Get the status of a watcher or all watchers
+ * **STATUS**: Get the status of a watcher or all watchers
  
  Watcher:
  ```python
@@ -80,7 +103,7 @@ True
  [{'status': 'stopped', 'name': 'another_watcher'}, {'status': 'stopped', 'name': 'a_watcher'}]
  ```
  
-* **start**: Start the arbiter or a watcher
+* **START**: Start the arbiter or a watcher
  
  ```python
  >>> from easy_circus.client import Client
