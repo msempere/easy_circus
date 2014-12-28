@@ -133,7 +133,7 @@ True
  >>> from easy_circus.client import Client
  >>> client = Client(host='127.0.0.1', port=5555, timeout=15)
  >>> client.global_options()
- {"pubsub_endpoint": "tcp://127.0.0.1:5556", "stats_endpoint": "tcp://127.0.0.1:5557", "endpoint: tcp://127.0.0.1:5555", "multicast_endpoint: udp://222.222.222.222:12027", "check_delay": 5.0}
- >>> client.global_options(["check_delay"])
- {"check_delay": 5.0}
+ {"pubsub_endpoint": "tcp://127.0.0.1:5556", "stats_endpoint": "tcp://127.0.0.1:5557", "endpoint": "tcp://127.0.0.1:5555", "multicast_endpoint": "udp://222.222.222.222:12027", "check_delay": 5.0}
+ >>> client.global_options(globaloptions=["check_delay", "multicast_endpoint"])
+ {"check_delay": 5.0, "multicast_endpoint": "udp://222.222.222.222:12027"}
  ```
