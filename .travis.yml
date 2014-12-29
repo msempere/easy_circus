@@ -1,5 +1,8 @@
-nguage: python
+language: python
+sudo: false
 python:
       - "2.7"
-install: "sudo pip install -r requirements.txt"
-script: sudo python setup.py install
+      - "3.3"
+      - "3.4"
+install: "pip install -r requirements.txt"
+script: python setup.py install
